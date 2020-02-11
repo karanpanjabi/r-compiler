@@ -1,5 +1,10 @@
+%option yylineno
+
 %{
+	#include <string.h>
     #include "y.tab.h"
+
+	#define TABLE_SIZE 100
 
 	enum type {NUMBER, STRING};
 
@@ -11,7 +16,12 @@
 		int lineno;
 	} Symbol;
 
-	Symbol 
+	Symbol table[TABLE_SIZE];
+	int lastSym=-1;
+
+	int exists(char *sym);
+	void display_table(Symbol *_table, int n);
+	void installID(char *sym_name, int lineno);
 %}
 
 %%
@@ -54,6 +64,7 @@
 		}
         
 "=="	{
+			printf("EQ\n");
   			return EQ;
 		}
         
@@ -97,10 +108,10 @@
 				return PRINT__;
 			}
         
-[0-9]+	{
-			printf("NUM_CONST: %s\n", yytext);
-  			return NUM_CONST;
-		}
+[0-9]+(\.[0-9]+)?	{
+						printf("NUM_CONST: %s, %d\n", yytext, yylineno);
+						return NUM_CONST;
+					}
 
 \".*\"	{
 			printf("STR_CONST: %s\n", yytext);
@@ -109,7 +120,8 @@
 
 
 
-[a-zA-Z_][a-zA-Z0-9_]*	{
+[a-zA-Z_][a-zA-Z0-9_.]*	{
+							installID(yytext, yylineno);
 							printf("SYMBOL: %s\n", yytext);
   							return SYMBOL;
 						}
@@ -118,13 +130,72 @@
 
 %%
 
-int yywrap() { return 1; }
+int yywrap() { return 0; }
 
+int exists(char *sym)
+{
+    int flag=0;
+    for(int i=0;i<TABLE_SIZE;i++){
+        if(strcmp(sym,table[i].sym) == 0){
+            flag=1;
+            break;
+        }
+    }
+    return(flag);
+}
+
+void installID(char *sym_name, int lineno)
+{
+	if(!exists(sym_name))
+	{
+		lastSym++;
+		strcpy(table[lastSym].sym, sym_name);
+		table[lastSym].lineno = lineno;
+	}
+}
+
+void display_table(Symbol *table, int n)                                            
+{                                                                                   
+    
+    int i;                                                                          
+    
+    printf("%-20s %-10s %-20s %-10s\n",
+           "SYMBOL", "TYPE", "ADDRESS", "LINE NO.");                                
+    for (i = 0; i < n; i++) {
+        char *sym = table[i].sym;                                                   
+        /*
+        char *type;
+        switch (table[i].type) {                                                    
+            case NUMBER:
+                type = "NUMBER";                                                    
+                break;
+            case STRING:
+                type = "STRING";                                                    
+                break;                                                              
+        }
+        printf("%-20s %-10s %-20s %-10s\n",                                         
+        sym, type, ad);                                                             
+        */
+        printf("%-20s %-10s %-20s %010d\n",                                         
+        sym, "", "", table[i].lineno);                                              
+    }                                                                               
+
+}
 
 int main()
 {
-	while(!feof(stdin))
+
+	int c;
+	extern FILE *yyin;
+
+	yyin = fopen("test.r", "r"); 
+	// yylex();
+
+	
+	while(!feof(yyin))
 	{
 		yylex();
-	}
+	} 
+
+	display_table(table, lastSym+1);
 }
