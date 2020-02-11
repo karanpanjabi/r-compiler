@@ -1,9 +1,29 @@
 %{
     #include "y.tab.h"
+
+	enum type {NUMBER, STRING};
+
+	typedef struct Symbol
+	{
+		char sym[20];
+		enum type type;
+		void *value_ptr;
+		int lineno;
+	} Symbol;
+
+	Symbol 
 %}
 
 %%
 
+#.*	;
+
+[ \t]	;
+
+\n	{
+		printf("NEWLINE\n");
+		return NEWLINE;
+	}
 
 "if"	{
 			return IF;
@@ -58,12 +78,24 @@
 		}
         
 "<-"	{
+			printf("<-\n");
   			return LEFT_ASSIGN;
 		}
         
 "="		{
+			printf("=\n");
   			return EQ_ASSIGN;
 		}
+
+"print("	{
+				printf("print(\n");
+				return PRINT_;
+			}
+
+")"			{
+				printf(")\n");
+				return PRINT__;
+			}
         
 [0-9]+	{
 			printf("NUM_CONST: %s\n", yytext);
@@ -75,15 +107,24 @@
   			return STR_CONST;
 		}
 
+
+
 [a-zA-Z_][a-zA-Z0-9_]*	{
-							printf("SYMBOL: %s\n", yytext)
+							printf("SYMBOL: %s\n", yytext);
   							return SYMBOL;
 						}
 
+.	{	return yytext[0];	}
 
 %%
 
+int yywrap() { return 1; }
+
+
 int main()
 {
-	yylex();
+	while(!feof(stdin))
+	{
+		yylex();
+	}
 }

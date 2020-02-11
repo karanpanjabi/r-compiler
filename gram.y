@@ -1,3 +1,5 @@
+%define parse.error verbose
+
 %{
     #include <stdio.h>
 %}
@@ -7,6 +9,9 @@
 %token LEFT_ASSIGN EQ_ASSIGN
 %token IF ELSE FOR WHILE
 %token IN
+
+%token PRINT_ PRINT__
+%token NEWLINE
 
 %left		WHILE FOR
 %right		IF
@@ -20,6 +25,7 @@
 %left		'*' '/'
 %left		':'
 %nonassoc	'('
+%nonassoc	LOW
 %%
 
 
@@ -34,6 +40,7 @@ expr: NUM_CONST
 	
 	|	'{' exprlist '}'
 	|	'(' expr_or_assign ')'	
+	
 	/***
 	|	expr ':'  expr			
 	|	expr '+'  expr			
@@ -50,9 +57,9 @@ expr: NUM_CONST
 	|	expr GE expr			
 	|	expr GT expr			
 	|	expr AND2 expr			
-	|	expr OR2 expr	***/
+	|	expr OR2 expr	
 
-	|	expr LEFT_ASSIGN expr 
+	|	expr LEFT_ASSIGN expr	***/
 	
 	|	IF ifcond expr_or_assign
 	|	IF ifcond expr_or_assign ELSE expr_or_assign
@@ -69,22 +76,39 @@ ifcond:	'(' expr ')'
 forcond:	'(' SYMBOL IN expr ')'
     ;
 
-equal_assign:    expr EQ_ASSIGN expr_or_assign
-    ;
+/*** 
+equal_assign:    SYMBOL EQ_ASSIGN expr_or_assign
+    ; ***/
 
-expr_or_assign:   expr |    equal_assign
+equal_assign:    expr EQ_ASSIGN expr_or_assign
+    ; 
+
+expr_or_assign:   expr
+	|    equal_assign
     ;
 
 exprlist:
 	|	expr_or_assign			
 	|	exprlist ';' expr_or_assign	
 	|	exprlist ';'			
-	|	exprlist '\n' expr_or_assign	
-	|	exprlist '\n'
+	|	exprlist NEWLINE expr_or_assign	
+	|	exprlist NEWLINE
     ;			
 				
 
-print_statement: "print(" expr ")"
+print_statement: PRINT_ expr PRINT__
     ;
 
 %%
+
+
+void yyerror (char const *s)
+{
+  fprintf (stderr, "%s\n", s);
+}
+
+
+int main()
+{
+	yyparse();
+}
