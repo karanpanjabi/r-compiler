@@ -142,11 +142,6 @@
 				// printf("print(\n");
 				return PRINT_;
 			}
-
-")"			{
-				// printf(")\n");
-				return PRINT__;
-			}
         
 [0-9]+(\.[0-9]+)?	{
 						// printf("NUM_CONST: %s, %d\n", yytext, yylineno);
@@ -170,7 +165,7 @@
 
 %%
 
-int yywrap() { return 0; }
+int yywrap() { return 1; }
 
 int exists(char *sym)
 {

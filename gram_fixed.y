@@ -2,6 +2,8 @@
 
 %{
     #include <stdio.h>
+
+	int valid = 1;
 %}
 
 
@@ -11,7 +13,7 @@
 %token IF ELSE FOR WHILE
 %token IN
 
-%token PRINT_ PRINT__
+%token PRINT_
 %token NEWLINE
 
 %token PLUS MINUS STAR FSLASH
@@ -46,6 +48,7 @@ exprlist:
 	|	exprlist NEWLINE
     |   exprlist NEWLINE print_statement
     |   exprlist SEMICOLON print_statement
+	|	print_statement
     ;
 
 expr_or_assign:   expr
@@ -64,7 +67,7 @@ statement:
 equal_assign:    expr EQ_ASSIGN expr_or_assign
     ;
 
-print_statement: PRINT_ expr PRINT__
+print_statement: PRINT_ expr RIGHT_PAREN
     ;
 
 
@@ -109,7 +112,24 @@ expr:   SYMBOL
 
 %%
 
+#include <ctype.h>
+int yyerror(const char *s)
+{
+    printf("Invalid program\n");
+    valid = 0;
+	extern int yylineno;
+	printf("Line no: %d \n The error is: %s\n",yylineno,s);
+    return 0;
+}
+
 int main()
 {
     yyparse();
+
+	if(valid)
+	{
+		printf("Valid program\n");
+	}
+
+	
 }

@@ -44,7 +44,6 @@ expr: NUM_CONST
 	/***
 	|	expr ':'  expr			
 	|	expr '+'  expr			
-	|	expr ':'  expr			
 	|	expr '-' expr			
 	|	expr '*' expr			
 	|	expr '/' expr

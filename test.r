@@ -1,9 +1,8 @@
 # this is a comment
 a = 3
 b = "hello"
-if (a == 2)
-{
-    a = 3
-}
+if (a == 2) { a = 3 }
 # b <- a <- 5
 print(a)
+
+for (i in 1:4) { print(i) }
