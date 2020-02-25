@@ -2,7 +2,10 @@
 
 %{
     #include <stdio.h>
+	#include "header.h"
 
+	extern Symbol table[TABLE_SIZE];
+	extern int lastSym;
 	int valid = 1;
 %}
 
@@ -134,5 +137,6 @@ int main()
 		printf("Valid program\n");
 	}
 
+	display_table(table, lastSym+1);
 
 }
