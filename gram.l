@@ -2,9 +2,9 @@
 
 %{
 	#include <string.h>
+	#include "header.h"
     #include "y.tab.h"
 
-	#include "header.h"
 
 	Symbol table[TABLE_SIZE];
 	int lastSym = -1;
@@ -131,11 +131,15 @@
         
 [0-9]+(\.[0-9]+)?	{
 						// printf("NUM_CONST: %s, %d\n", yytext, yylineno);
+						strcpy(yylval.type, "number");
+						strcpy(yylval.value, yytext);
 						return NUM_CONST;
 					}
 
 \".*\"	{
 			// printf("STR_CONST: %s\n", yytext);
+			strcpy(yylval.type, "string");
+			strcpy(yylval.value, yytext);
   			return STR_CONST;
 		}
 
@@ -144,6 +148,7 @@
 [a-zA-Z_][a-zA-Z0-9_.]*	{
 							installID(yytext, yylineno);
 							// printf("SYMBOL: %s\n", yytext);
+							strcpy(yylval.value, yytext);
   							return SYMBOL;
 						}
 
@@ -175,13 +180,22 @@ void installID(char *sym_name, int lineno)
 	}
 }
 
+void modifyID(char *symbol, char *dtype, char *value){
+	for(int i=0; i<lastSym+1; i++){
+		if(strcmp(symbol,table[i].sym)==0){
+			strcpy(table[i].dtype, dtype);
+			strcpy(table[i].value, value);
+		}
+	}
+}
+
 void display_table(Symbol *table, int n)                                            
 {                                                                                   
     
     int i;                                                                          
     
     printf("%-20s %-10s %-20s %-10s\n",
-           "SYMBOL", "TYPE", "ADDRESS", "LINE NO.");                                
+           "SYMBOL", "TYPE", "VALUE", "LINE NO.");                                
     for (i = 0; i < n; i++) {
         char *sym = table[i].sym;                                                   
         /*
@@ -198,7 +212,7 @@ void display_table(Symbol *table, int n)
         sym, type, ad);                                                             
         */
         printf("%-20s %-10s %-20s %010d\n",                                         
-        sym, "", "", table[i].lineno);                                              
+        sym, table[i].dtype, table[i].value, table[i].lineno);                                              
     }                                                                               
 
 }

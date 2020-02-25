@@ -54,7 +54,7 @@ exprlist:
 	|	print_statement
     ;
 
-expr_or_assign:   expr
+expr_or_assign:   expr	{ $$ = $1; }
 	|   equal_assign
     |   statement
     ;
@@ -67,7 +67,7 @@ statement:
 
     ;
 
-equal_assign:    expr EQ_ASSIGN expr_or_assign
+equal_assign:    SYMBOL EQ_ASSIGN expr_or_assign	{ printf("eq_assign: %s %s, SYMBOL: %s\n", $3.type, $3.value, $1.value); modifyID($1.value, $3.type, $3.value); }
     ;
 
 print_statement: PRINT_ expr RIGHT_PAREN
@@ -91,8 +91,8 @@ forcond:	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN
 
 
 expr:   SYMBOL
-    |   NUM_CONST
-    |   STR_CONST
+    |   NUM_CONST	{ printf("num_cost: %s %s\n", $1.type, $1.value); $$ = $1;}
+    |   STR_CONST	{ printf("str_const: %s %s\n", $1.type, $1.value); $$ = $1; }
 
     |	LEFT_CURLY exprlist RIGHT_CURLY
 	|	LEFT_PAREN expr_or_assign RIGHT_PAREN
@@ -112,7 +112,7 @@ expr:   SYMBOL
 	|	expr AND2 expr			
 	|	expr OR2 expr	
 
-	|	expr LEFT_ASSIGN expr
+	|	SYMBOL LEFT_ASSIGN expr		{ printf("left_assign: %s %s, SYMBOL: %s\n", $3.type, $3.value, $1.value); modifyID($1.value, $3.type, $3.value); }
     
     ;
 
@@ -125,7 +125,16 @@ int yyerror(const char *s)
     valid = 0;
 	extern int yylineno;
 	printf("Line no: %d \n The error is: %s\n",yylineno,s);
-    return 0;
+
+	while(1)
+	{
+		int tok = yylex();
+		printf("Err: %d\n", tok);
+		if(tok == NEWLINE || tok == SEMICOLON)
+			break;
+	}
+	yyparse();
+    return 1;
 }
 
 int main()
