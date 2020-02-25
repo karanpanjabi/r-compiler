@@ -30,7 +30,7 @@
 
 [ \t]	;
 
-\n	{
+\n+	{
 		// printf("NEWLINE\n");
 		return NEWLINE;
 	}

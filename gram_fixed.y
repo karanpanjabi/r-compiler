@@ -72,14 +72,17 @@ print_statement: PRINT_ expr RIGHT_PAREN
 
 
 cond:	LEFT_PAREN expr RIGHT_PAREN
+	|	LEFT_PAREN expr RIGHT_PAREN NEWLINE
     ;
 
 
 ifcond:	LEFT_PAREN expr RIGHT_PAREN
+	|	LEFT_PAREN expr RIGHT_PAREN NEWLINE	
     ;
 
 
 forcond:	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN
+	|	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN NEWLINE
     ;
 
 
@@ -131,5 +134,5 @@ int main()
 		printf("Valid program\n");
 	}
 
-	
+
 }
