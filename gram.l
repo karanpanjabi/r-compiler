@@ -31,7 +31,7 @@
 [ \t]	;
 
 \n	{
-		printf("NEWLINE\n");
+		// printf("NEWLINE\n");
 		return NEWLINE;
 	}
 
@@ -55,6 +55,46 @@
 			return IN;
 		}
 
+"+"		{
+			return PLUS;
+		}
+
+"-"		{
+			return MINUS;
+		}
+
+"*"		{
+			return STAR;
+		}
+
+"/"		{
+			return FSLASH;
+		}
+
+";"		{
+			return SEMICOLON;
+		}
+
+":"		{
+			return COLON;
+		}
+
+"("		{
+			return LEFT_PAREN;
+		}
+
+")"		{
+			return RIGHT_PAREN;
+		}
+
+"{"		{
+			return LEFT_CURLY;
+		}
+
+"}"		{
+			return RIGHT_CURLY;
+		}
+
 "<"		{
   			return LT;
 		}
@@ -64,7 +104,7 @@
 		}
         
 "=="	{
-			printf("EQ\n");
+			// printf("EQ\n");
   			return EQ;
 		}
         
@@ -89,32 +129,32 @@
 		}
         
 "<-"	{
-			printf("<-\n");
+			// printf("<-\n");
   			return LEFT_ASSIGN;
 		}
         
 "="		{
-			printf("=\n");
+			// printf("=\n");
   			return EQ_ASSIGN;
 		}
 
 "print("	{
-				printf("print(\n");
+				// printf("print(\n");
 				return PRINT_;
 			}
 
 ")"			{
-				printf(")\n");
+				// printf(")\n");
 				return PRINT__;
 			}
         
 [0-9]+(\.[0-9]+)?	{
-						printf("NUM_CONST: %s, %d\n", yytext, yylineno);
+						// printf("NUM_CONST: %s, %d\n", yytext, yylineno);
 						return NUM_CONST;
 					}
 
 \".*\"	{
-			printf("STR_CONST: %s\n", yytext);
+			// printf("STR_CONST: %s\n", yytext);
   			return STR_CONST;
 		}
 
@@ -122,7 +162,7 @@
 
 [a-zA-Z_][a-zA-Z0-9_.]*	{
 							installID(yytext, yylineno);
-							printf("SYMBOL: %s\n", yytext);
+							// printf("SYMBOL: %s\n", yytext);
   							return SYMBOL;
 						}
 
@@ -182,6 +222,7 @@ void display_table(Symbol *table, int n)
 
 }
 
+/*
 int main()
 {
 
@@ -198,4 +239,4 @@ int main()
 	} 
 
 	display_table(table, lastSym+1);
-}
+} */
