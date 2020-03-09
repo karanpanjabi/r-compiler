@@ -1,8 +1,18 @@
 # this is a comment
 a = 3
 b = "hello"
-if (a == 2) { a = 3 }
-# b <- a <- 5
-print(a)
+c <- 2.3
+if a == 2) 
 
-for (i in 1:4) { print(i) }
+
+{ 
+    a = 3
+}
+# egd <- 567
+print(a)
+a <- 3.5
+for (i in 1:4) {
+
+    print(i) 
+    
+}
