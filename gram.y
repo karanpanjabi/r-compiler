@@ -2,11 +2,14 @@
 
 %{
     #include <stdio.h>
+	#include <string.h>
+	#include <stdlib.h>
 	#include "header.h"
+	#include "ast.h"
 
-	extern Symbol table[TABLE_SIZE];
-	extern int lastSym;
 	int valid = 1;
+
+	extern char * yytext;
 %}
 
 
@@ -40,21 +43,26 @@
 
 %%
 
-start: exprlist
+start: exprlist		{
+						$$ = $1;
+						printf("%p\n", $1.nodeptr);
+						display_subtree($$.nodeptr);
+						printf("here\n");
+					}
     ;
 
 exprlist:
-	|	expr_or_assign			
+	|	expr_or_assign							{	$$ = $1;	}
 	|	exprlist SEMICOLON expr_or_assign	
-	|	exprlist SEMICOLON			
+	|	exprlist SEMICOLON						{	$$ = $1;	}
 	|	exprlist NEWLINE expr_or_assign	
-	|	exprlist NEWLINE
+	|	exprlist NEWLINE						{	$$ = $1;	}
     |   exprlist NEWLINE print_statement
     |   exprlist SEMICOLON print_statement
 	|	print_statement
     ;
 
-expr_or_assign:   expr	{ $$ = $1; }
+expr_or_assign:   expr	{ $$ = $1; printf("%p\n", $$.nodeptr); display_subtree($$.nodeptr); }
 	|   equal_assign
     |   statement
     ;
@@ -94,20 +102,30 @@ forcond:	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN
 
 
 
-expr:   SYMBOL
-    |   NUM_CONST	{ 
-						printf("num_cost: %s %s\n", $1.type, $1.value);
+expr:   SYMBOL		{
+						$1.nodeptr = make_node("SYMBOL", (data) getSymbol(yytext), (NodePtrList) {NULL});
 						$$ = $1;
 					}
+    |   NUM_CONST	{ 
+						printf("num_cost: %s %s\n", $1.type, $1.value);
+						$1.nodeptr = make_node("NUM_CONST", (data) atoi($1.value), (NodePtrList) {NULL}); // check what to do for double type
+						$$ = $1;
+						display_subtree($$.nodeptr);
+					}
     |   STR_CONST	{ 
-						printf("str_const: %s %s\n", $1.type, $1.value); 
+						printf("str_const: %s %s\n", $1.type, $1.value);
+						data temp_;
+    					strcpy(temp_.str_const, $1.value);
+						$1.nodeptr = make_node("STR_CONST", temp_, (NodePtrList) {NULL});
 						$$ = $1; 
 					}
 
     |	LEFT_CURLY exprlist RIGHT_CURLY
 	|	LEFT_PAREN expr_or_assign RIGHT_PAREN
 
-    |	expr COLON expr
+    |	expr COLON expr		{
+
+							}
 	|	expr PLUS expr
 	|	expr MINUS expr
 	|	expr STAR expr
@@ -142,7 +160,9 @@ int yyerror(const char *s)
 	while(1)
 	{
 		int tok = yylex();
-		printf("Err: %d\n", tok);
+		// printf("Err: %d \n", tok);
+		extern char * yytext;
+		printf("Err: %s \n", yytext);
 		if(tok == NEWLINE || tok == SEMICOLON)
 			break;
 	}

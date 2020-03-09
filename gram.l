@@ -167,7 +167,18 @@ int exists(char *sym)
             break;
         }
     }
-    return(flag);
+    return flag;
+}
+
+Symbol *getSymbol(char *sym)
+{
+	for(int i=0;i<TABLE_SIZE;i++){
+        if(strcmp(sym,table[i].sym) == 0){
+            return &table[i];
+        }
+    }
+
+	return NULL;
 }
 
 void installID(char *sym_name, int lineno)

@@ -6,6 +6,8 @@ typedef struct
 {
     char type[20];
     char value[20];
+
+    struct Node *nodeptr;
 } yylval_t;
 
 #define YYSTYPE yylval_t
@@ -27,3 +29,5 @@ extern int lastSym;
 int exists(char *sym);
 void display_table(Symbol *_table, int n);
 void installID(char *sym_name, int lineno);
+void modifyID(char *symbol, char *dtype, char *value);
+Symbol *getSymbol(char *sym);
