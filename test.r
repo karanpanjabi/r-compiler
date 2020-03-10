@@ -16,5 +16,8 @@
 #     print(i) 
     
 # }
-
-3
+while(i < 5)
+{
+    a = 3
+    print(a)
+}

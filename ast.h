@@ -23,7 +23,7 @@ typedef struct Node
 
 #define NodePtrList Node * []
 
-Node* make_node(char *type, data value, Node* *list);
+Node* make_node(char *type, data value, Node* *list, int len);
 void display_subtree(Node *n);
 
 

@@ -205,8 +205,9 @@ void display_table(Symbol *table, int n)
     
     int i;                                                                          
     
-    printf("%-20s %-10s %-20s %-10s\n",
-           "SYMBOL", "TYPE", "VALUE", "LINE NO.");                                
+    // printf("%-20s %-10s %-20s %-10s\n", "SYMBOL", "TYPE", "VALUE", "LINE NO.");   
+	printf("\t\t\t%s\t%s\t%s\t\t%s\n",
+           "SYMBOL", "TYPE", "VALUE", "LINE NO.");                               
     for (i = 0; i < n; i++) {
         char *sym = table[i].sym;                                                   
         /*
@@ -222,8 +223,8 @@ void display_table(Symbol *table, int n)
         printf("%-20s %-10s %-20s %-10s\n",                                         
         sym, type, ad);                                                             
         */
-        printf("%-20s %-10s %-20s %010d\n",                                         
-        sym, table[i].dtype, table[i].value, table[i].lineno);                                              
+        printf("%p\t\t%s\t%s\t%s\t\t%d\n",                                    
+        &table[i], sym, table[i].dtype, table[i].value, table[i].lineno);                                              
     }                                                                               
 
 }

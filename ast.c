@@ -3,31 +3,38 @@
 #include <string.h>
 #include "ast.h"
 
-Node* make_node(char *type, data value, Node* *list)
+Node* make_node(char *type, data value, Node* *list, int len)
 {
     Node *temp = (Node *) malloc(sizeof(Node));
     strcpy(temp->type, type);
     temp->value = value;
 
-    int i = 0;
-    while(list[i] != NULL)
+    for (int i = 0; i < len; i++)
     {
         temp->ptrlist[i] = list[i];
-        i++;
     }
+    
 
-    temp->_numnodes = i;
+    temp->_numnodes = len;
 
     return temp;
 }
 
 void disp_node_details(Node *n)
 {
+    printf("\n----------------------------\n");
+    printf("Node Type: %s\t", n->type);
+    printf("Node Child Count: %d\t", n->_numnodes);
     printf("Node Data: ");
     if(strcmp(n->type, "NUM_CONST") == 0)
     {
-        printf("%d\n", n->value);
+        printf("%d\n", n->value.num_const);
     }
+    else if(strcmp(n->type, "SYMBOL") == 0)
+    {
+        printf("%p\n", n->value.ptr);
+    }
+    printf("\n----------------------------\n");
 }
 
 void display_subtree(Node *n)
