@@ -43,8 +43,6 @@ typedef struct Node
     char type[20];
     NodeType n_type;
     union data value;
-    // struct Node *left;
-    // struct Node *right;
 
     int _numnodes;
     struct Node* ptrlist[10];

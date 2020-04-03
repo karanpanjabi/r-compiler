@@ -1,0 +1,6 @@
+add unary operators to grammar
+replace node *n with specific types in function signatures in icg.c
+handle floating constants
+fix initial value thing for variables
+only one line with error - infinite loop
+more semantic errors (from ast probably)

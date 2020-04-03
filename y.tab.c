@@ -69,7 +69,7 @@
 	#include <stdlib.h>
 	#include "header.h"
 	#include "ast.h"
-	// #include "icg.h"
+	#include "icg.h"
 
 	int valid = 1;
 
@@ -1941,5 +1941,7 @@ int main()
 
 	display_table(table, lastSym+1);
 
-	// tac_postorder(root);
+	tac_postorder(root);
+
+	tac_disptable();
 }
