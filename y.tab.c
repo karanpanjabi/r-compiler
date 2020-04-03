@@ -69,12 +69,14 @@
 	#include <stdlib.h>
 	#include "header.h"
 	#include "ast.h"
+	// #include "icg.h"
 
 	int valid = 1;
 
 	extern char * yytext;
+	Node *root = NULL;
 
-#line 78 "y.tab.c" /* yacc.c:339  */
+#line 80 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -189,7 +191,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 193 "y.tab.c" /* yacc.c:358  */
+#line 195 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -489,11 +491,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    46,    46,    53,    54,    55,    58,    59,    62,    63,
-      66,    69,    72,    73,    74,    78,    81,    84,    87,    94,
-     104,   110,   111,   115,   116,   120,   124,   132,   136,   141,
-     149,   150,   152,   155,   158,   161,   164,   168,   171,   174,
-     177,   180,   183,   186,   189,   193
+       0,    48,    48,    54,    55,    56,    59,    60,    63,    64,
+      67,    70,    73,    74,    75,    79,    82,    85,    88,    95,
+     105,   111,   112,   116,   117,   121,   125,   133,   137,   142,
+     150,   151,   153,   156,   159,   162,   165,   169,   172,   175,
+     178,   181,   184,   187,   190,   194
 };
 #endif
 
@@ -1341,337 +1343,335 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 46 "gram.y" /* yacc.c:1646  */
+#line 48 "gram.y" /* yacc.c:1646  */
     {
 						(yyval) = (yyvsp[0]);
-						printf("%p\n", (yyvsp[0]).nodeptr);
-						display_subtree((yyval).nodeptr);
+						root = (yyval).nodeptr;
 					}
-#line 1351 "y.tab.c" /* yacc.c:1646  */
+#line 1352 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 54 "gram.y" /* yacc.c:1646  */
+#line 55 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[0]);	}
-#line 1357 "y.tab.c" /* yacc.c:1646  */
+#line 1358 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 55 "gram.y" /* yacc.c:1646  */
+#line 56 "gram.y" /* yacc.c:1646  */
     {
-													(yyval).nodeptr = make_node("SEQ", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+													(yyval).nodeptr = make_node("SEQ", N_SEQ, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 												}
-#line 1365 "y.tab.c" /* yacc.c:1646  */
+#line 1366 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 58 "gram.y" /* yacc.c:1646  */
+#line 59 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1371 "y.tab.c" /* yacc.c:1646  */
+#line 1372 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 59 "gram.y" /* yacc.c:1646  */
+#line 60 "gram.y" /* yacc.c:1646  */
     {	
-													(yyval).nodeptr = make_node("SEQ", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+													(yyval).nodeptr = make_node("SEQ", N_SEQ, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 												}
-#line 1379 "y.tab.c" /* yacc.c:1646  */
+#line 1380 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 62 "gram.y" /* yacc.c:1646  */
+#line 63 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1385 "y.tab.c" /* yacc.c:1646  */
+#line 1386 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 63 "gram.y" /* yacc.c:1646  */
+#line 64 "gram.y" /* yacc.c:1646  */
     {
-													(yyval).nodeptr = make_node("SEQ", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+													(yyval).nodeptr = make_node("SEQ", N_SEQ, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 												}
-#line 1393 "y.tab.c" /* yacc.c:1646  */
+#line 1394 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 66 "gram.y" /* yacc.c:1646  */
+#line 67 "gram.y" /* yacc.c:1646  */
     {
-													(yyval).nodeptr = make_node("SEQ", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+													(yyval).nodeptr = make_node("SEQ", N_SEQ, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 												}
-#line 1401 "y.tab.c" /* yacc.c:1646  */
+#line 1402 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 69 "gram.y" /* yacc.c:1646  */
+#line 70 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[0]);	}
-#line 1407 "y.tab.c" /* yacc.c:1646  */
+#line 1408 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 72 "gram.y" /* yacc.c:1646  */
+#line 73 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[0]);	}
-#line 1413 "y.tab.c" /* yacc.c:1646  */
+#line 1414 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 73 "gram.y" /* yacc.c:1646  */
+#line 74 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[0]);	}
-#line 1419 "y.tab.c" /* yacc.c:1646  */
+#line 1420 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 74 "gram.y" /* yacc.c:1646  */
+#line 75 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[0]);	}
-#line 1425 "y.tab.c" /* yacc.c:1646  */
+#line 1426 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 78 "gram.y" /* yacc.c:1646  */
+#line 79 "gram.y" /* yacc.c:1646  */
     {
-															(yyval).nodeptr = make_node("IF", (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr, NULL}, 3);
+															(yyval).nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr, NULL}, 3);
 														}
-#line 1433 "y.tab.c" /* yacc.c:1646  */
+#line 1434 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 81 "gram.y" /* yacc.c:1646  */
+#line 82 "gram.y" /* yacc.c:1646  */
     {
-															(yyval).nodeptr = make_node("IF", (data) 0, (NodePtrList) {(yyvsp[-3]).nodeptr, (yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 3);
+															(yyval).nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {(yyvsp[-3]).nodeptr, (yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 3);
 														}
-#line 1441 "y.tab.c" /* yacc.c:1646  */
+#line 1442 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 84 "gram.y" /* yacc.c:1646  */
+#line 85 "gram.y" /* yacc.c:1646  */
     {
-															(yyval).nodeptr = make_node("FOR", (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+															(yyval).nodeptr = make_node("FOR", N_FOR, (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 														}
-#line 1449 "y.tab.c" /* yacc.c:1646  */
+#line 1450 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 87 "gram.y" /* yacc.c:1646  */
+#line 88 "gram.y" /* yacc.c:1646  */
     {
-															(yyval).nodeptr = make_node("WHILE", (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+															(yyval).nodeptr = make_node("WHILE", N_WHILE, (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 														}
-#line 1457 "y.tab.c" /* yacc.c:1646  */
+#line 1458 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 94 "gram.y" /* yacc.c:1646  */
+#line 95 "gram.y" /* yacc.c:1646  */
     { 
-										printf("eq_assign: %s %s, SYMBOL: %s\n", (yyvsp[0]).type, (yyvsp[0]).value, (yyvsp[-2]).value); 
+										
 										modifyID((yyvsp[-2]).value, (yyvsp[0]).type, (yyvsp[0]).value); 
 
-										(yyvsp[-2]).nodeptr = make_node("SYMBOL", (data) getSymbol((yyvsp[-2]).value), (NodePtrList) {NULL}, 0);
-										(yyval).nodeptr = make_node("=", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+										(yyvsp[-2]).nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol((yyvsp[-2]).value), (NodePtrList) {NULL}, 0);
+										(yyval).nodeptr = make_node("=", N_ASSIGN, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 									}
-#line 1469 "y.tab.c" /* yacc.c:1646  */
+#line 1470 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 104 "gram.y" /* yacc.c:1646  */
+#line 105 "gram.y" /* yacc.c:1646  */
     {
-										(yyval).nodeptr = make_node("PRINT", (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr}, 1);
+										(yyval).nodeptr = make_node("PRINT", N_PRINT, (data) 0, (NodePtrList) {(yyvsp[-1]).nodeptr}, 1);
 									}
-#line 1477 "y.tab.c" /* yacc.c:1646  */
+#line 1478 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 110 "gram.y" /* yacc.c:1646  */
+#line 111 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1483 "y.tab.c" /* yacc.c:1646  */
+#line 1484 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 111 "gram.y" /* yacc.c:1646  */
+#line 112 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-2]);	}
-#line 1489 "y.tab.c" /* yacc.c:1646  */
+#line 1490 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 115 "gram.y" /* yacc.c:1646  */
+#line 116 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1495 "y.tab.c" /* yacc.c:1646  */
+#line 1496 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 116 "gram.y" /* yacc.c:1646  */
+#line 117 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-2]);	}
-#line 1501 "y.tab.c" /* yacc.c:1646  */
+#line 1502 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 120 "gram.y" /* yacc.c:1646  */
+#line 121 "gram.y" /* yacc.c:1646  */
     {	
-															(yyvsp[-3]).nodeptr = make_node("SYMBOL", (data) getSymbol((yyvsp[-3]).value), (NodePtrList) {NULL}, 0);	
-															(yyval).nodeptr = make_node("FORCOND", (data) 0, (NodePtrList) {(yyvsp[-3]).nodeptr, (yyvsp[-1]).nodeptr}, 2);
+															(yyvsp[-3]).nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol((yyvsp[-3]).value), (NodePtrList) {NULL}, 0);	
+															(yyval).nodeptr = make_node("FORCOND", N_FORCOND, (data) 0, (NodePtrList) {(yyvsp[-3]).nodeptr, (yyvsp[-1]).nodeptr}, 2);
 														}
-#line 1510 "y.tab.c" /* yacc.c:1646  */
+#line 1511 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 124 "gram.y" /* yacc.c:1646  */
+#line 125 "gram.y" /* yacc.c:1646  */
     {
-															(yyvsp[-4]).nodeptr = make_node("SYMBOL", (data) getSymbol((yyvsp[-4]).value), (NodePtrList) {NULL}, 0);	
-															(yyval).nodeptr = make_node("FORCOND", (data) 0, (NodePtrList) {(yyvsp[-4]).nodeptr, (yyvsp[-2]).nodeptr}, 2);
+															(yyvsp[-4]).nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol((yyvsp[-4]).value), (NodePtrList) {NULL}, 0);	
+															(yyval).nodeptr = make_node("FORCOND", N_FORCOND, (data) 0, (NodePtrList) {(yyvsp[-4]).nodeptr, (yyvsp[-2]).nodeptr}, 2);
 														}
-#line 1519 "y.tab.c" /* yacc.c:1646  */
+#line 1520 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 132 "gram.y" /* yacc.c:1646  */
+#line 133 "gram.y" /* yacc.c:1646  */
     {
-						(yyvsp[0]).nodeptr = make_node("SYMBOL", (data) getSymbol((yyvsp[0]).value), (NodePtrList) {NULL}, 0);
+						(yyvsp[0]).nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol((yyvsp[0]).value), (NodePtrList) {NULL}, 0);
 						(yyval) = (yyvsp[0]);
 					}
-#line 1528 "y.tab.c" /* yacc.c:1646  */
+#line 1529 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 136 "gram.y" /* yacc.c:1646  */
+#line 137 "gram.y" /* yacc.c:1646  */
     { 
-						printf("num_const: %s %s\n", (yyvsp[0]).type, (yyvsp[0]).value);
-						(yyvsp[0]).nodeptr = make_node("NUM_CONST", (data) atoi((yyvsp[0]).value), (NodePtrList) {NULL}, 0); // check what to do for double type
+						
+						(yyvsp[0]).nodeptr = make_node("NUM_CONST", N_NUM_CONST, (data) atoi((yyvsp[0]).value), (NodePtrList) {NULL}, 0); // check what to do for double type
 						(yyval) = (yyvsp[0]);
 					}
-#line 1538 "y.tab.c" /* yacc.c:1646  */
+#line 1539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 141 "gram.y" /* yacc.c:1646  */
+#line 142 "gram.y" /* yacc.c:1646  */
     { 
-						printf("str_const: %s %s\n", (yyvsp[0]).type, (yyvsp[0]).value);
+						
 						data temp_;
     					strcpy(temp_.str_const, (yyvsp[0]).value);
-						(yyvsp[0]).nodeptr = make_node("STR_CONST", temp_, (NodePtrList) {NULL}, 0);
+						(yyvsp[0]).nodeptr = make_node("STR_CONST", N_STR_CONST, temp_, (NodePtrList) {NULL}, 0);
 						(yyval) = (yyvsp[0]); 
 					}
-#line 1550 "y.tab.c" /* yacc.c:1646  */
+#line 1551 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 149 "gram.y" /* yacc.c:1646  */
+#line 150 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1556 "y.tab.c" /* yacc.c:1646  */
+#line 1557 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 150 "gram.y" /* yacc.c:1646  */
+#line 151 "gram.y" /* yacc.c:1646  */
     {	(yyval) = (yyvsp[-1]);	}
-#line 1562 "y.tab.c" /* yacc.c:1646  */
+#line 1563 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 152 "gram.y" /* yacc.c:1646  */
+#line 153 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node(":", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node(":", N_RANGE, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1570 "y.tab.c" /* yacc.c:1646  */
+#line 1571 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 155 "gram.y" /* yacc.c:1646  */
+#line 156 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("+", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("+", N_BADD, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1578 "y.tab.c" /* yacc.c:1646  */
+#line 1579 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 158 "gram.y" /* yacc.c:1646  */
+#line 159 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("-", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("-", N_BSUB, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1586 "y.tab.c" /* yacc.c:1646  */
+#line 1587 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 161 "gram.y" /* yacc.c:1646  */
+#line 162 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("*", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("*", N_BMUL, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1594 "y.tab.c" /* yacc.c:1646  */
+#line 1595 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 164 "gram.y" /* yacc.c:1646  */
+#line 165 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("/", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("/", N_BDIV, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1602 "y.tab.c" /* yacc.c:1646  */
+#line 1603 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 168 "gram.y" /* yacc.c:1646  */
+#line 169 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("<", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("<", N_LT, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1610 "y.tab.c" /* yacc.c:1646  */
+#line 1611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 171 "gram.y" /* yacc.c:1646  */
+#line 172 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("<=", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("<=", N_LE, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1618 "y.tab.c" /* yacc.c:1646  */
+#line 1619 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 174 "gram.y" /* yacc.c:1646  */
+#line 175 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("==", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("==", N_EQ, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1626 "y.tab.c" /* yacc.c:1646  */
+#line 1627 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 177 "gram.y" /* yacc.c:1646  */
+#line 178 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("!=", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("!=", N_NE, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1634 "y.tab.c" /* yacc.c:1646  */
+#line 1635 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 180 "gram.y" /* yacc.c:1646  */
+#line 181 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node(">=", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node(">=", N_GE, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1642 "y.tab.c" /* yacc.c:1646  */
+#line 1643 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 183 "gram.y" /* yacc.c:1646  */
+#line 184 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node(">", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node(">", N_GT, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1650 "y.tab.c" /* yacc.c:1646  */
+#line 1651 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 186 "gram.y" /* yacc.c:1646  */
+#line 187 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("&&", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("&&", N_AND2, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1658 "y.tab.c" /* yacc.c:1646  */
+#line 1659 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 189 "gram.y" /* yacc.c:1646  */
+#line 190 "gram.y" /* yacc.c:1646  */
     {
-								(yyval).nodeptr = make_node("||", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+								(yyval).nodeptr = make_node("||", N_OR2, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 							}
-#line 1666 "y.tab.c" /* yacc.c:1646  */
+#line 1667 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 193 "gram.y" /* yacc.c:1646  */
+#line 194 "gram.y" /* yacc.c:1646  */
     { 
-										printf("left_assign: %s %s, SYMBOL: %s\n", (yyvsp[0]).type, (yyvsp[0]).value, (yyvsp[-2]).value); 
 										modifyID((yyvsp[-2]).value, (yyvsp[0]).type, (yyvsp[0]).value); 
-										(yyvsp[-2]).nodeptr = make_node("SYMBOL", (data) getSymbol((yyvsp[-2]).value), (NodePtrList) {NULL}, 0);
-										(yyval).nodeptr = make_node("<-", (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
+										(yyvsp[-2]).nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol((yyvsp[-2]).value), (NodePtrList) {NULL}, 0);
+										(yyval).nodeptr = make_node("<-", N_LEFT_ASSIGN, (data) 0, (NodePtrList) {(yyvsp[-2]).nodeptr, (yyvsp[0]).nodeptr}, 2);
 									}
 #line 1677 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -1919,9 +1919,8 @@ int yyerror(const char *s)
 	while(1)
 	{
 		int tok = yylex();
-		// printf("Err: %d \n", tok);
-		extern char * yytext;
-		printf("Err: %s \n", yytext);
+		// extern char * yytext;
+		// printf("Err: %s \n", yytext);
 		if(tok == NEWLINE || tok == SEMICOLON)
 			break;
 	}
@@ -1938,6 +1937,9 @@ int main()
 		printf("Valid program\n");
 	}
 
+	display_subtree(root);
+
 	display_table(table, lastSym+1);
 
+	// tac_postorder(root);
 }

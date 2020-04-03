@@ -3,18 +3,17 @@
 #include <string.h>
 #include "ast.h"
 
-Node* make_node(char *type, data value, Node* *list, int len)
+Node* make_node(char *type, NodeType n_type, data value, Node* *list, int len)
 {
     Node *temp = (Node *) malloc(sizeof(Node));
     strcpy(temp->type, type);
+    temp->n_type = n_type;
     temp->value = value;
 
     for (int i = 0; i < len; i++)
     {
         temp->ptrlist[i] = list[i];
     }
-    
-
     temp->_numnodes = len;
 
     return temp;
@@ -41,11 +40,10 @@ void display_subtree(Node *n)
 {
     if(n != NULL)
     {
-        disp_node_details(n);
         for (int i = 0; i < n->_numnodes; i++)
         {
             display_subtree(n->ptrlist[i]);
         }
-        
+        disp_node_details(n);
     }
 }

@@ -1,5 +1,5 @@
 a.out : lex.yy.c y.tab.c header.h ast.h ast.c
-	gcc lex.yy.c y.tab.c ast.c
+	gcc -g lex.yy.c y.tab.c ast.c
 	
 lex.yy.c : gram.l gram.y header.h
 	yacc -d -v gram.y
