@@ -233,11 +233,12 @@ void addQuadIfElse(Node *n)
 
 void addQuadWhile(Node *n)
 {
-    Node *cond, *iffalsegoto, *bodylabel, *body, *bodyendgoto, *exitlabel;
+    // {bodylabel, $2.nodeptr, iffalsegoto, $3.nodeptr, bodyendgoto, exitlabel}, 6);
+    Node *bodylabel, *cond, *iffalsegoto, *body, *bodyendgoto, *exitlabel;
 
-    cond = n->ptrlist[0];
-    iffalsegoto = n->ptrlist[1]; // modifying op1 and result label
-    bodylabel = n->ptrlist[2];
+    bodylabel = n->ptrlist[0];
+    cond = n->ptrlist[1];
+    iffalsegoto = n->ptrlist[2]; // modifying op1 and result label
     body = n->ptrlist[3];
     bodyendgoto = n->ptrlist[4]; // modifying result label
     exitlabel = n->ptrlist[5];

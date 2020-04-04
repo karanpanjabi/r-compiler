@@ -99,7 +99,7 @@ statement:
 															Node *bodylabel = make_node("WHILEBODYLABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
 															Node *bodyendgoto = make_node("WHILEBODYGOTO", N_GOTO, (data) 0, (NodePtrList) {NULL}, 0);
 															Node *exitlabel = make_node("WHILEEXITLABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
-															$$.nodeptr = make_node("WHILE", N_WHILE, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, bodylabel, $3.nodeptr, bodyendgoto, exitlabel}, 6);
+															$$.nodeptr = make_node("WHILE", N_WHILE, (data) 0, (NodePtrList) {bodylabel, $2.nodeptr, iffalsegoto, $3.nodeptr, bodyendgoto, exitlabel}, 6);
 														}
 
     ;
