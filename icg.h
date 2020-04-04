@@ -12,6 +12,7 @@ typedef union {
     char str_const[20];
 
     int tsym;
+    int label;
 } operanddata;
 
 typedef enum OperandType
@@ -20,6 +21,7 @@ typedef enum OperandType
     OP_NUM_CONST,
     OP_STR_CONST,
     OP_TSYM,
+    OP_LABEL,
     OP_NONE
 } OperandType;
 
@@ -36,7 +38,20 @@ typedef enum Operation
     O_MUL,
     O_DIV,
 
-    O_ASSIGN
+    O_LT,
+    O_LE,
+    O_EQ,
+    O_NE,
+    O_GE,
+    O_GT,
+    O_AND2,
+    O_OR2,
+
+    O_ASSIGN,
+
+    O_LABEL,
+    O_IFFALSEGOTO,
+    O_GOTO
 } Operation;
 
 typedef struct quad

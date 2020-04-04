@@ -35,7 +35,11 @@ typedef enum NodeType
     N_GT,
     N_AND2,
     N_OR2,
-    N_LEFT_ASSIGN
+    N_LEFT_ASSIGN,
+
+    N_LABEL,
+    N_IFFALSEGOTO,
+    N_GOTO
 } NodeType;
 
 typedef struct Node
@@ -48,6 +52,8 @@ typedef struct Node
     struct Node* ptrlist[10];
 
     int _tempNum;
+    int _labelNum;
+    int _gotoquadidx;
 } Node;
 
 #define NodePtrList Node * []

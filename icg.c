@@ -6,6 +6,7 @@
 quad tacTable[TACSIZE];
 int tacNum = 0;
 int tempCount = 0;
+int labelCount = 0;
 
 int is_binop(Node *n)
 {
@@ -15,6 +16,14 @@ int is_binop(Node *n)
     case N_BSUB:
     case N_BMUL:
     case N_BDIV:
+    case N_LT:
+    case N_LE:
+    case N_EQ:
+    case N_NE:
+    case N_GE:
+    case N_GT:
+    case N_AND2:
+    case N_OR2:
         return 1;
     }
 
@@ -49,6 +58,23 @@ Operation getoperation(Node *n)
         return O_MUL;
     case N_BDIV:
         return O_DIV;
+
+    case N_LT:
+        return O_LT;
+    case N_LE:
+        return O_LE;
+    case N_EQ:
+        return O_EQ;
+    case N_NE:
+        return O_NE;
+    case N_GE:
+        return O_GE;
+    case N_GT:
+        return O_GT;
+    case N_AND2:
+        return O_AND2;
+    case N_OR2:
+        return O_OR2;
     }
 }
 
@@ -154,12 +180,103 @@ void addQuadAssign(Node *n)
     addQuad(iquad);
 }
 
+void addQuadLabel(Node *n)
+{
+    quad iquad;
+    iquad.o_op = O_LABEL;
+
+    operand result;
+    result.type = OP_LABEL;
+    result.data.label = labelCount++;
+    n->_labelNum = result.data.label;
+
+    iquad.result = result;
+    iquad.op1.type = OP_NONE;
+    iquad.op2.type = OP_NONE;
+
+    addQuad(iquad);
+}
+
+void addQuadIfFalseGoto(Node *n)
+{
+    quad iquad;
+    iquad.o_op = O_IFFALSEGOTO;
+
+    operand result;
+    result.type = OP_LABEL;
+    result.data.label = -1; // to be filled
+    n->_gotoquadidx = tacNum;
+
+    iquad.result = result;
+    iquad.op1.type = OP_NONE; // to be filled
+    iquad.op2.type = OP_NONE;
+    addQuad(iquad);
+}
+
+void addQuadGoto(Node *n)
+{
+    quad iquad;
+
+    iquad.o_op = O_GOTO;
+
+    operand result;
+    result.type = OP_LABEL;
+    result.data.label = -1; // to be filled
+    n->_gotoquadidx = tacNum;
+
+    iquad.result = result;
+    iquad.op1.type = OP_NONE;
+    iquad.op2.type = OP_NONE;
+    addQuad(iquad);
+}
+
+void addQuadIfElse(Node *n)
+{
+    Node *cond, *iffalsegoto, *ifbody, *ifbodygoto, *preelselabel, *elsebody, *postelselabel;
+
+    cond = n->ptrlist[0];
+    iffalsegoto = n->ptrlist[1]; // modifying op1, result label
+    ifbody = n->ptrlist[2];
+    ifbodygoto = n->ptrlist[3]; // modifying result label
+    preelselabel = n->ptrlist[4];
+    elsebody = n->ptrlist[5];
+    postelselabel = n->ptrlist[6];
+
+    operand temp;
+
+    // if false goto quad
+    quad *quad_iffalsegoto = &tacTable[iffalsegoto->_gotoquadidx];
+    if (cond->n_type == N_SYMBOL)
+    {
+        temp.type = OP_PTR;
+        temp.data.ptr = cond->value.ptr;
+    }
+    else if (cond->n_type == N_NUM_CONST)
+    {
+        temp.type = OP_NUM_CONST;
+        temp.data.num_const = cond->value.num_const;
+    }
+    else if (cond->n_type == N_STR_CONST)
+    {
+        temp.type = OP_STR_CONST;
+        strcpy(temp.data.str_const, cond->value.str_const);
+    }
+    else
+    {
+        temp.type = OP_TSYM;
+        temp.data.tsym = cond->_tempNum;
+    }
+
+    quad_iffalsegoto->op1 = temp;
+    quad_iffalsegoto->result.data.label = preelselabel->_labelNum;
+
+    // if body end quad
+    quad *quad_ifbodygoto = &tacTable[ifbodygoto->_gotoquadidx];
+    quad_ifbodygoto->result.data.label = postelselabel->_labelNum;
+}
+
 void tac_main(Node *n)
 {
-
-    // if n is SEQ node
-
-    // if n is a binary op
     if (is_binop(n))
     {
         addQuadBinOp(n);
@@ -167,14 +284,27 @@ void tac_main(Node *n)
 
     else if (n->n_type == N_ASSIGN || n->n_type == N_LEFT_ASSIGN)
     {
-        addQuadBinOp(n);
+        addQuadAssign(n);
     }
-    
-    else if(n->n_type == N_IF)
+
+    else if (n->n_type == N_LABEL)
     {
-        Node *cond = n->ptrlist[0];
-        Node *ifbody = n->ptrlist[1];
-        Node *elsebody = n->ptrlist[2];
+        addQuadLabel(n);
+    }
+
+    else if (n->n_type == N_IFFALSEGOTO)
+    {
+        addQuadIfFalseGoto(n);
+    }
+
+    else if (n->n_type == N_GOTO)
+    {
+        addQuadGoto(n);
+    }
+
+    else if (n->n_type == N_IF)
+    {
+        addQuadIfElse(n);
     }
 }
 
@@ -206,6 +336,9 @@ void display_operand(operand op)
     case OP_STR_CONST:
         printf("%s", op.data.str_const);
         break;
+    case OP_LABEL:
+        printf("L%d", op.data.label);
+        break;
     default:
         break;
     }
@@ -226,6 +359,41 @@ void display_operation(Operation operation)
         break;
     case O_DIV:
         printf("DIV");
+        break;
+
+    case O_LT:
+        printf("LT");
+        break;
+    case O_LE:
+        printf("LE");
+        break;
+    case O_EQ:
+        printf("EQ");
+        break;
+    case O_NE:
+        printf("NE");
+        break;
+    case O_GE:
+        printf("GE");
+        break;
+    case O_GT:
+        printf("GT");
+        break;
+    case O_AND2:
+        printf("AND2");
+        break;
+    case O_OR2:
+        printf("OR2");
+        break;
+
+    case O_LABEL:
+        printf("LABEL");
+        break;
+    case O_IFFALSEGOTO:
+        printf("IFFALSEGOTO");
+        break;
+    case O_GOTO:
+        printf("GOTO");
         break;
     default:
         break;

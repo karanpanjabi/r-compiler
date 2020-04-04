@@ -4,3 +4,5 @@ handle floating constants
 fix initial value thing for variables
 only one line with error - infinite loop
 more semantic errors (from ast probably)
+fix curly brace on same line error
+fix else getting last line of if body

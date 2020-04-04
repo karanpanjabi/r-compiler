@@ -77,10 +77,18 @@ expr_or_assign:   expr	{	$$ = $1;	}
 
 statement:
     	IF ifcond expr_or_assign						{
-															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr, NULL}, 3);
+															Node *elselabel = make_node("ELSELABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *postelselabel = make_node("POSTELSELABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *iffalsegoto = make_node("IFFALSEGOTO", N_IFFALSEGOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *ifbodygoto = make_node("IFBODYGOTO", N_GOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, $3.nodeptr, ifbodygoto, elselabel, NULL, postelselabel}, 7);
 														}
-	|	IF ifcond expr_or_assign ELSE expr_or_assign	{
-															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr, $5.nodeptr}, 3);
+	|	IF ifcond expr_or_assign ELSE expr_or_assign	{	
+															Node *elselabel = make_node("ELSELABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *postelselabel = make_node("POSTELSELABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *iffalsegoto = make_node("IFFALSEGOTO", N_IFFALSEGOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *ifbodygoto = make_node("IFBODYGOTO", N_GOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, $3.nodeptr, ifbodygoto, elselabel, $5.nodeptr, postelselabel}, 7);
 														}
 	|	FOR forcond expr_or_assign						{
 															$$.nodeptr = make_node("FOR", N_FOR, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr}, 2);
