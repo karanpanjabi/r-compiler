@@ -94,7 +94,11 @@ statement:
 															$$.nodeptr = make_node("FOR", N_FOR, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr}, 2);
 														}
 	|	WHILE cond expr_or_assign						{
-															$$.nodeptr = make_node("WHILE", N_WHILE, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr}, 2);
+															Node *iffalsegoto = make_node("IFFALSEGOTO", N_IFFALSEGOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *bodylabel = make_node("WHILEBODYLABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *bodyendgoto = make_node("WHILEBODYGOTO", N_GOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															Node *exitlabel = make_node("WHILEEXITLABEL", N_LABEL, (data) 0, (NodePtrList) {NULL}, 0);
+															$$.nodeptr = make_node("WHILE", N_WHILE, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, bodylabel, $3.nodeptr, bodyendgoto, exitlabel}, 6);
 														}
 
     ;

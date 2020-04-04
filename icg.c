@@ -35,6 +35,30 @@ int is_op(Node *n)
     return is_binop(n);
 }
 
+void nodeToOperand(Node *node, operand *op)
+{
+    if (node->n_type == N_SYMBOL)
+    {
+        op->type = OP_PTR;
+        op->data.ptr = node->value.ptr;
+    }
+    else if (node->n_type == N_NUM_CONST)
+    {
+        op->type = OP_NUM_CONST;
+        op->data.num_const = node->value.num_const;
+    }
+    else if (node->n_type == N_STR_CONST)
+    {
+        op->type = OP_STR_CONST;
+        strcpy(op->data.str_const, node->value.str_const);
+    }
+    else
+    {
+        op->type = OP_TSYM;
+        op->data.tsym = node->_tempNum;
+    }
+}
+
 void addQuad(quad q)
 {
     if (tacNum == TACSIZE)
@@ -96,38 +120,8 @@ void addQuadBinOp(Node *n)
     Node *op1node = n->ptrlist[0];
     Node *op2node = n->ptrlist[1];
 
-    if (op1node->n_type == N_NUM_CONST)
-    {
-        op1.type = OP_NUM_CONST;
-        op1.data.num_const = op1node->value.num_const;
-    }
-    else if (op1node->n_type == N_SYMBOL)
-    {
-        op1.type = OP_PTR;
-        op1.data.ptr = op1node->value.ptr;
-    }
-    else if (is_op(op1node))
-    {
-        op1.type = OP_TSYM;
-        op1.data.tsym = op1node->_tempNum;
-    }
-    // TODO: check if can be something else
-
-    if (op2node->n_type == N_NUM_CONST)
-    {
-        op2.type = OP_NUM_CONST;
-        op2.data.num_const = op2node->value.num_const;
-    }
-    else if (op2node->n_type == N_SYMBOL)
-    {
-        op2.type = OP_PTR;
-        op2.data.ptr = op2node->value.ptr;
-    }
-    else if (is_op(op2node))
-    {
-        op2.type = OP_TSYM;
-        op2.data.tsym = op2node->_tempNum;
-    }
+    nodeToOperand(op1node, &op1);
+    nodeToOperand(op2node, &op2);
 
     iquad.result = result;
     iquad.op1 = op1;
@@ -153,26 +147,7 @@ void addQuadAssign(Node *n)
 
     op1.type = OP_NONE;
 
-    if (right->n_type == N_SYMBOL)
-    {
-        op2.type = OP_PTR;
-        op2.data.ptr = right->value.ptr;
-    }
-    else if (right->n_type == N_NUM_CONST)
-    {
-        op2.type = OP_NUM_CONST;
-        op2.data.num_const = right->value.num_const;
-    }
-    else if (right->n_type == N_STR_CONST)
-    {
-        op2.type = OP_STR_CONST;
-        strcpy(op2.data.str_const, right->value.str_const);
-    }
-    else
-    {
-        op2.type = OP_TSYM;
-        op2.data.tsym = right->_tempNum;
-    }
+    nodeToOperand(right, &op2);
 
     iquad.result = result;
     iquad.op1 = op1;
@@ -246,26 +221,7 @@ void addQuadIfElse(Node *n)
 
     // if false goto quad
     quad *quad_iffalsegoto = &tacTable[iffalsegoto->_gotoquadidx];
-    if (cond->n_type == N_SYMBOL)
-    {
-        temp.type = OP_PTR;
-        temp.data.ptr = cond->value.ptr;
-    }
-    else if (cond->n_type == N_NUM_CONST)
-    {
-        temp.type = OP_NUM_CONST;
-        temp.data.num_const = cond->value.num_const;
-    }
-    else if (cond->n_type == N_STR_CONST)
-    {
-        temp.type = OP_STR_CONST;
-        strcpy(temp.data.str_const, cond->value.str_const);
-    }
-    else
-    {
-        temp.type = OP_TSYM;
-        temp.data.tsym = cond->_tempNum;
-    }
+    nodeToOperand(cond, &temp);
 
     quad_iffalsegoto->op1 = temp;
     quad_iffalsegoto->result.data.label = preelselabel->_labelNum;
@@ -273,6 +229,28 @@ void addQuadIfElse(Node *n)
     // if body end quad
     quad *quad_ifbodygoto = &tacTable[ifbodygoto->_gotoquadidx];
     quad_ifbodygoto->result.data.label = postelselabel->_labelNum;
+}
+
+void addQuadWhile(Node *n)
+{
+    Node *cond, *iffalsegoto, *bodylabel, *body, *bodyendgoto, *exitlabel;
+
+    cond = n->ptrlist[0];
+    iffalsegoto = n->ptrlist[1]; // modifying op1 and result label
+    bodylabel = n->ptrlist[2];
+    body = n->ptrlist[3];
+    bodyendgoto = n->ptrlist[4]; // modifying result label
+    exitlabel = n->ptrlist[5];
+
+    operand temp;
+    quad *quad_iffalsegoto = &tacTable[iffalsegoto->_gotoquadidx];
+    nodeToOperand(cond, &temp);
+
+    quad_iffalsegoto->op1 = temp;
+    quad_iffalsegoto->result.data.label = exitlabel->_labelNum;
+
+    quad *quad_bodyendgoto = &tacTable[bodyendgoto->_gotoquadidx];
+    quad_bodyendgoto->result.data.label = bodylabel->_labelNum;
 }
 
 void tac_main(Node *n)
@@ -305,6 +283,11 @@ void tac_main(Node *n)
     else if (n->n_type == N_IF)
     {
         addQuadIfElse(n);
+    }
+
+    else if (n->n_type == N_WHILE)
+    {
+        addQuadWhile(n);
     }
 }
 
