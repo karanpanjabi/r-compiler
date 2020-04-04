@@ -253,6 +253,79 @@ void addQuadWhile(Node *n)
     quad_bodyendgoto->result.data.label = bodylabel->_labelNum;
 }
 
+void addQuadFor(Node *n)
+{
+    if (n->n_type == N_FORCOND)
+    {
+        /*
+            what this part generates
+            i = start   // first
+            label L..   // second
+            t.. = i LE end  // third
+        */
+
+        quad first, second, third;
+    
+        first.o_op = O_ASSIGN;
+        nodeToOperand(n->ptrlist[0], &first.result);
+        nodeToOperand(n->ptrlist[1]->ptrlist[0], &first.op1);
+        addQuad(first);
+
+        second.o_op = O_LABEL;
+        second.result.type = OP_LABEL;
+        second.result.data.label = labelCount++;
+        second.op1.type = second.op2.type = OP_NONE;
+        n->_labelNum = second.result.data.label;
+        addQuad(second);
+
+        third.o_op = O_LE;
+        third.result.type = OP_TSYM;
+        third.result.data.tsym = tempCount++;
+        n->_tempNum = third.result.data.tsym;
+        
+        nodeToOperand(n->ptrlist[0], &third.op1);
+        nodeToOperand(n->ptrlist[1]->ptrlist[1], &third.op2);
+        addQuad(third);
+
+    }
+
+    else if (n->n_type == N_FOR)
+    {
+        // adds i = i+1 (first), goto bodylabel (second), exit label (third), sets iffalsegoto to exit label
+        Node *forcond, *iffalsegoto, *forbody;
+
+        forcond = n->ptrlist[0];
+        iffalsegoto = n->ptrlist[1];    // modifying op1, result label
+        forbody = n->ptrlist[2];
+
+        quad first, second, third;
+        
+        first.o_op = O_ADD;
+        nodeToOperand(forcond->ptrlist[0], &first.result);
+        nodeToOperand(forcond->ptrlist[0], &first.op1);
+        first.op2.type = OP_NUM_CONST;
+        first.op2.data.num_const = 1;
+        addQuad(first);
+
+        second.o_op = O_GOTO;
+        second.result.type = OP_LABEL;
+        second.result.data.label = forcond->_labelNum;
+        addQuad(second);
+
+        third.o_op = O_LABEL;
+        third.result.type = OP_LABEL;
+        third.result.data.label = labelCount++;
+        third.op1.type = third.op2.type = OP_NONE;
+        addQuad(third);
+
+        quad *quad_iffalsegoto = &tacTable[iffalsegoto->_gotoquadidx];
+        quad_iffalsegoto->op1.type = OP_TSYM;
+        quad_iffalsegoto->op1.data.tsym = forcond->_tempNum;
+        quad_iffalsegoto->result.type = OP_LABEL;
+        quad_iffalsegoto->result.data.label = third.result.data.label;
+    }
+}
+
 void tac_main(Node *n)
 {
     if (is_binop(n))
@@ -288,6 +361,11 @@ void tac_main(Node *n)
     else if (n->n_type == N_WHILE)
     {
         addQuadWhile(n);
+    }
+
+    else if (n->n_type == N_FORCOND || n->n_type == N_FOR)
+    {
+        addQuadFor(n);
     }
 }
 
@@ -383,17 +461,21 @@ void display_operation(Operation operation)
     }
 }
 
+void display_quad(quad *q)
+{
+    display_operand(q->result);
+    printf(" = ");
+    display_operand(q->op1);
+    printf(" ");
+    display_operation(q->o_op);
+    printf(" ");
+    display_operand(q->op2);
+    printf("\n");
+}
 void tac_disptable()
 {
     for (int i = 0; i < tacNum; i++)
     {
-        display_operand(tacTable[i].result);
-        printf(" = ");
-        display_operand(tacTable[i].op1);
-        printf(" ");
-        display_operation(tacTable[i].o_op);
-        printf(" ");
-        display_operand(tacTable[i].op2);
-        printf("\n");
+        display_quad(&tacTable[i]);
     }
 }

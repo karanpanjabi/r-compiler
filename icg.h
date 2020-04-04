@@ -17,12 +17,12 @@ typedef union {
 
 typedef enum OperandType
 {
+    OP_NONE,
     OP_PTR,
     OP_NUM_CONST,
     OP_STR_CONST,
     OP_TSYM,
-    OP_LABEL,
-    OP_NONE
+    OP_LABEL
 } OperandType;
 
 typedef struct operand

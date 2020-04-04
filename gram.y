@@ -91,7 +91,8 @@ statement:
 															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, $3.nodeptr, ifbodygoto, elselabel, $5.nodeptr, postelselabel}, 7);
 														}
 	|	FOR forcond expr_or_assign						{
-															$$.nodeptr = make_node("FOR", N_FOR, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr}, 2);
+															Node *iffalsegoto = make_node("IFFALSEGOTO", N_IFFALSEGOTO, (data) 0, (NodePtrList) {NULL}, 0);
+															$$.nodeptr = make_node("FOR", N_FOR, (data) 0, (NodePtrList) {$2.nodeptr, iffalsegoto, $3.nodeptr}, 3);
 														}
 	|	WHILE cond expr_or_assign						{
 															Node *iffalsegoto = make_node("IFFALSEGOTO", N_IFFALSEGOTO, (data) 0, (NodePtrList) {NULL}, 0);
@@ -130,17 +131,19 @@ ifcond:	LEFT_PAREN expr RIGHT_PAREN				{	$$ = $2;	}
     ;
 
 
-forcond:	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN		{	
+forcond:	LEFT_PAREN SYMBOL IN range RIGHT_PAREN		{	
 															$2.nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol($2.value), (NodePtrList) {NULL}, 0);	
 															$$.nodeptr = make_node("FORCOND", N_FORCOND, (data) 0, (NodePtrList) {$2.nodeptr, $4.nodeptr}, 2);
 														}
-	|	LEFT_PAREN SYMBOL IN expr RIGHT_PAREN NEWLINE	{
+	|	LEFT_PAREN SYMBOL IN range RIGHT_PAREN NEWLINE	{
 															$2.nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol($2.value), (NodePtrList) {NULL}, 0);	
 															$$.nodeptr = make_node("FORCOND", N_FORCOND, (data) 0, (NodePtrList) {$2.nodeptr, $4.nodeptr}, 2);
 														}
     ;
 
-
+range: expr COLON expr		{
+								$$.nodeptr = make_node(":", N_RANGE, (data) 0, (NodePtrList) {$1.nodeptr, $3.nodeptr}, 2);
+							}
 
 expr:   SYMBOL		{
 						$1.nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol($1.value), (NodePtrList) {NULL}, 0);
@@ -162,9 +165,7 @@ expr:   SYMBOL		{
     |	LEFT_CURLY exprlist RIGHT_CURLY				{	$$ = $2;	}
 	|	LEFT_PAREN expr_or_assign RIGHT_PAREN		{	$$ = $2;	}
 
-    |	expr COLON expr		{
-								$$.nodeptr = make_node(":", N_RANGE, (data) 0, (NodePtrList) {$1.nodeptr, $3.nodeptr}, 2);
-							}
+    
 	|	expr PLUS expr		{
 								$$.nodeptr = make_node("+", N_BADD, (data) 0, (NodePtrList) {$1.nodeptr, $3.nodeptr}, 2);
 							}
