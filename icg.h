@@ -48,6 +48,7 @@ typedef enum Operation
     O_OR2,
 
     O_ASSIGN,
+    O_PRINT,
 
     O_LABEL,
     O_IFFALSEGOTO,

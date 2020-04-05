@@ -368,6 +368,28 @@ void tac_main(Node *n)
     {
         addQuadFor(n);
     }
+
+    else if (n->n_type == N_PRINT)
+    {
+        quad iquad;
+
+        iquad.o_op = O_PRINT;
+
+        quad tAssign;
+        tAssign.o_op = O_ASSIGN;
+        tAssign.result.type = OP_TSYM;
+        tAssign.result.data.tsym = tempCount++;
+        nodeToOperand(n->ptrlist[0], &tAssign.op1);
+
+        addQuad(tAssign);
+
+        iquad.result.type = OP_TSYM;
+        iquad.result.data.tsym = tAssign.result.data.tsym;
+
+        iquad.op1.type = iquad.op2.type = OP_NONE;
+        addQuad(iquad);
+    }
+    
 }
 
 void tac_postorder(Node *n)
@@ -456,6 +478,10 @@ void display_operation(Operation operation)
         break;
     case O_GOTO:
         printf("GOTO");
+        break;
+
+    case O_PRINT:
+        printf("PRINT");
         break;
     default:
         break;
