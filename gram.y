@@ -77,9 +77,17 @@ expr_or_assign:   expr	{	$$ = $1;	}
 
 statement:
     	IF ifcond expr_or_assign						{
+															printf("IN SINGLE IF\n");
+															display_subtree($3.nodeptr);
+															printf("END OF SINGLE IF\n");
 															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr, NULL}, 3);
 														}
 	|	IF ifcond expr_or_assign ELSE expr_or_assign	{
+															printf("IN IF ELSE\n");
+															display_subtree($3.nodeptr);
+															printf("********************\n");
+															display_subtree($5.nodeptr);
+															printf("END IF ELSE\n");
 															$$.nodeptr = make_node("IF", N_IF, (data) 0, (NodePtrList) {$2.nodeptr, $3.nodeptr, $5.nodeptr}, 3);
 														}
 	|	FOR forcond expr_or_assign						{
