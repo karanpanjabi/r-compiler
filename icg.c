@@ -35,6 +35,24 @@ int is_op(Node *n)
     return is_binop(n);
 }
 
+// puts the temporary in the symbol table
+void installTemp(int quadNum)
+{
+    quad tQuad = tacTable[quadNum];
+    int tempNum = tQuad.result.data.tsym;
+    char st[5];
+    sprintf(st, "t%d", tempNum);
+    installID(st, -1);
+    if(tQuad.op1.type == OP_STR_CONST)
+        modifyID(st, "string", (char[1]) {0});
+    else
+    {
+        modifyID(st, "number", (char[1]) {0});
+    }
+    
+}
+
+
 void nodeToOperand(Node *node, operand *op)
 {
     if (node->n_type == N_SYMBOL)
@@ -127,6 +145,8 @@ void addQuadBinOp(Node *n)
     iquad.op1 = op1;
     iquad.op2 = op2;
     addQuad(iquad);
+
+    installTemp(tacNum - 1);
 }
 
 void addQuadAssign(Node *n)
@@ -288,6 +308,7 @@ void addQuadFor(Node *n)
         nodeToOperand(n->ptrlist[1]->ptrlist[1], &third.op2);
         addQuad(third);
 
+        installTemp(tacNum - 1);
     }
 
     else if (n->n_type == N_FOR)
@@ -382,12 +403,15 @@ void tac_main(Node *n)
         nodeToOperand(n->ptrlist[0], &tAssign.op1);
 
         addQuad(tAssign);
+        installTemp(tacNum - 1);
 
         iquad.result.type = OP_TSYM;
         iquad.result.data.tsym = tAssign.result.data.tsym;
 
         iquad.op1.type = iquad.op2.type = OP_NONE;
         addQuad(iquad);
+
+        
     }
     
 }

@@ -188,12 +188,13 @@ void installID(char *sym_name, int lineno)
 		lastSym++;
 		strcpy(table[lastSym].sym, sym_name);
 		table[lastSym].lineno = lineno;
+		table[lastSym].value[0] = 0;
 	}
 }
 
 void modifyID(char *symbol, char *dtype, char *value){
 	for(int i=0; i<lastSym+1; i++){
-		if(strcmp(symbol,table[i].sym)==0){
+		if(strcmp(symbol,table[i].sym)==0 && table[i].value[0] == 0){
 			strcpy(table[i].dtype, dtype);
 			strcpy(table[i].value, value);
 		}

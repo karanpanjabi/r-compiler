@@ -106,8 +106,12 @@ statement:
 
 equal_assign:
 	SYMBOL EQ_ASSIGN expr_or_assign	{ 
-										
-										modifyID($1.value, $3.type, $3.value); 
+										// modify only if $3.nodeptr->n_type is N_NUM_CONST or N_STR_CONST
+										printf("$3: %s %d\n", $3.nodeptr->type, $3.nodeptr->n_type);
+										if($3.nodeptr->n_type == N_NUM_CONST || $3.nodeptr->n_type == N_STR_CONST)
+										{
+											modifyID($1.value, $3.type, $3.value);
+										}	
 
 										$1.nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol($1.value), (NodePtrList) {NULL}, 0);
 										$$.nodeptr = make_node("=", N_ASSIGN, (data) 0, (NodePtrList) {$1.nodeptr, $3.nodeptr}, 2);
@@ -250,4 +254,6 @@ int main()
 	tac_postorder(root);
 
 	tac_disptable();
+
+	// display_table(table, lastSym+1);
 }
