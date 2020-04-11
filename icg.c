@@ -165,9 +165,9 @@ void addQuadAssign(Node *n)
     operand op1;
     operand op2;
 
-    op1.type = OP_NONE;
+    op2.type = OP_NONE;
 
-    nodeToOperand(right, &op2);
+    nodeToOperand(right, &op1);
 
     iquad.result = result;
     iquad.op1 = op1;

@@ -7,6 +7,7 @@
 	#include "header.h"
 	#include "ast.h"
 	#include "icg.h"
+	#include "opt.h"
 
 	int valid = 1;
 
@@ -107,7 +108,7 @@ statement:
 equal_assign:
 	SYMBOL EQ_ASSIGN expr_or_assign	{ 
 										// modify only if $3.nodeptr->n_type is N_NUM_CONST or N_STR_CONST
-										printf("$3: %s %d\n", $3.nodeptr->type, $3.nodeptr->n_type);
+										
 										if($3.nodeptr->n_type == N_NUM_CONST || $3.nodeptr->n_type == N_STR_CONST)
 										{
 											modifyID($1.value, $3.type, $3.value);
@@ -209,7 +210,11 @@ expr:   SYMBOL		{
 							}
 
 	|	SYMBOL LEFT_ASSIGN expr		{ 
-										modifyID($1.value, $3.type, $3.value); 
+										if($3.nodeptr->n_type == N_NUM_CONST || $3.nodeptr->n_type == N_STR_CONST)
+										{
+											modifyID($1.value, $3.type, $3.value);
+										}	
+									
 										$1.nodeptr = make_node("SYMBOL", N_SYMBOL, (data) getSymbol($1.value), (NodePtrList) {NULL}, 0);
 										$$.nodeptr = make_node("<-", N_LEFT_ASSIGN, (data) 0, (NodePtrList) {$1.nodeptr, $3.nodeptr}, 2);
 									}
@@ -256,4 +261,22 @@ int main()
 	tac_disptable();
 
 	// display_table(table, lastSym+1);
+
+	const_prop();
+
+	printf("\n\nAfter const_prop\n");
+
+	tac_disptable();
+
+	const_folding();
+
+	printf("\n\nAfter const_folding\n");
+
+	for(int i=0; i<10; i++)
+	{
+		const_prop();
+		const_folding();
+	}
+
+	tac_disptable();
 }

@@ -67,6 +67,7 @@ typedef struct quad
 } quad;
 
 extern quad tacTable[TACSIZE]; // check what to do about this 100 for larger programs
+extern int tacNum;
 
 void tac_postorder(Node *n);
 void tac_disptable();
