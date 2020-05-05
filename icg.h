@@ -2,34 +2,10 @@
 
 #include "header.h"
 #include "ast.h"
+#include "gen_util.h"
 
 #define TACSIZE 100
 
-// TODO: verify if operand is same as union data
-typedef union {
-    Symbol *ptr;
-    int num_const;
-    char str_const[20];
-
-    int tsym;
-    int label;
-} operanddata;
-
-typedef enum OperandType
-{
-    OP_NONE,
-    OP_PTR,
-    OP_NUM_CONST,
-    OP_STR_CONST,
-    OP_TSYM,
-    OP_LABEL
-} OperandType;
-
-typedef struct operand
-{
-    OperandType type;
-    operanddata data;
-} operand;
 
 typedef enum Operation
 {

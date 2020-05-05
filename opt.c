@@ -10,7 +10,7 @@ void const_prop_aux(int i)
         for (int j = i + 1; j < tacNum; j++)
         {
             quad *quadj = &tacTable[j];
-            if (quadj->o_op == O_ASSIGN && quadj->result.data.ptr == quadi->result.data.ptr)
+            if (quadj->o_op == O_LABEL ||  (quadj->o_op == O_ASSIGN && quadj->result.data.ptr == quadi->result.data.ptr))
             {
                 break;
             }
@@ -54,6 +54,7 @@ void const_folding()
         {
             // assuming integer result for now, TODO: handle floats
             int res = -1;
+            int flag = 0;
             int num1 = quadi->op1.data.num_const;
             int num2 = quadi->op2.data.num_const;
             switch (quadi->o_op)
@@ -69,10 +70,40 @@ void const_folding()
                 break;
             case O_DIV:
                 res = num1 / num2;
+                break;
+            
+            case O_LT:
+                res = num1 < num2;
+                break;
+            case O_LE:
+                res = num1 <= num2;
+                break;
+            case O_EQ:
+                res = num1 == num2;
+                break;
+            case O_NE:
+                res = num1 != num2;
+                break;
+            case O_GE:
+                res = num1 >= num2;
+                break;
+            case O_GT:
+                res = num1 > num2;
+                break;
+            case O_AND2:
+                res = num1 && num2;
+                break;
+            case O_OR2:
+                res = num1 || num2;
+                break;
+
             default:
+                flag = 1;
                 break;
             }
 
+            if(flag == 1)
+            { continue; }
             quadi->op1.data.num_const = res;
             quadi->op2.type = OP_NONE;
             quadi->o_op = O_ASSIGN; // can be used further to check const_prop

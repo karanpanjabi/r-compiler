@@ -8,6 +8,7 @@
 	#include "ast.h"
 	#include "icg.h"
 	#include "opt.h"
+	#include "target.h"
 
 	int valid = 1;
 
@@ -264,13 +265,13 @@ int main()
 
 	const_prop();
 
-	printf("\n\nAfter const_prop\n");
+	// printf("\n\nAfter const_prop\n");
 
-	tac_disptable();
+	// tac_disptable();
 
 	const_folding();
 
-	printf("\n\nAfter const_folding\n");
+	printf("\n\nAfter const prop and folding\n");
 
 	for(int i=0; i<10; i++)
 	{
@@ -279,4 +280,9 @@ int main()
 	}
 
 	tac_disptable();
+
+	printf("\n\n");
+
+	generate_machine();
+	print_machine();
 }
