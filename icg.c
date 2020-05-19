@@ -290,6 +290,7 @@ void addQuadFor(Node *n)
         first.o_op = O_ASSIGN;
         nodeToOperand(n->ptrlist[0], &first.result);
         nodeToOperand(n->ptrlist[1]->ptrlist[0], &first.op1);
+        first.op2.type = OP_NONE;
         addQuad(first);
 
         second.o_op = O_LABEL;
@@ -332,6 +333,7 @@ void addQuadFor(Node *n)
         second.o_op = O_GOTO;
         second.result.type = OP_LABEL;
         second.result.data.label = forcond->_labelNum;
+        second.op1.type = second.op2.type = OP_NONE;
         addQuad(second);
 
         third.o_op = O_LABEL;
@@ -401,7 +403,8 @@ void tac_main(Node *n)
         tAssign.result.type = OP_TSYM;
         tAssign.result.data.tsym = tempCount++;
         nodeToOperand(n->ptrlist[0], &tAssign.op1);
-
+        tAssign.op2.type = OP_NONE;
+        
         addQuad(tAssign);
         installTemp(tacNum - 1);
 
